@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario para calcular notas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        td {
+            padding: 8px;
+            vertical-align: middle;
+        }
+        input[type="text"], select {
+            font-family: Verdana, sans-serif;
+            font-size: 10pt;
+            text-align: right;
+            padding: 4px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="button"], input[type="reset"] {
+            font-family: Verdana, sans-serif;
+            font-weight: bold;
+            font-size: 10pt;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
+        input[type="button"]:hover, input[type="reset"]:hover {
+            background-color: #e0e0e0;
+        }
+        .disabled-input {
+            background-color: #f9f9f9;
+            border: none;
+            font-weight: bold;
+        }
+        .comment-input {
+            width: 100%;
+            text-align: center;
+            font-size: 8pt;
+            border: none;
+            background-color: transparent;
+        }
+        .links {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .links a {
+            font-size: 9pt;
+            color: #0066cc;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        hr {
+            border: 1px solid #000;
+            width: 85%;
+            margin: 20px auto;
+        }
+        .footer {
+            text-align: center;
+            font-size: 9pt;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <hr>
+        <form>
+            <h2 style="text-align: center; font-size: 24pt; font-family: Helvetica;">
+                Formulario para Calcular Notas (calificaciones)
+            </h2>
+            
+            <table>
+                <tr>
+                    <td width="40%"><label for="xid">Puntaje ideal:</label></td>
+                    <td width="40%">
+                        <input type="text" size="8" name="xid" id="xid" placeholder="0">
+                        puntos
+                    </td>
+                    <td width="20%"></td>
+                </tr>
+                <tr>
+                    <td><label for="porexig">Porcentaje de exigencia:</label></td>
+                    <td>
+                        <input type="text" size="8" name="porexig" id="porexig" value="50">
+                        %
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><label for="nmaxap">Nota máxima aprobatoria:</label></td>
+                    <td>
+                        <input type="text" size="8" name="nmaxap" id="nmaxap" value="10">
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><label for="nminap">Nota mínima aprobatoria:</label></td>
+                    <td>
+                        <input type="text" size="8" name="nminap" id="nminap" value="5">
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><label for="xalum">Puntaje del alumno:</label></td>
+                    <td>
+                        <input type="text" size="8" name="xalum" id="xalum" placeholder="0">
+                        puntos
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td style="text-align: center;">
+                        <input type="button" value="Calcular" onclick="calcularNota(this.form)">
+                        <input type="reset" value="Borrar todo">
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><label>Puntaje de exigencia:</label></td>
+                    <td>
+                        <input type="text" size="8" name="xexig" class="disabled-input" readonly>
+                        puntos
+                    </td>
+                    <td>
+                        <select name="decimexig">
+                            <option selected value="0">Sin decimales</option>
+                            <option value="1">Con un decimal</option>
+                            <option value="2">Con dos decimales</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label><strong>NOTA:</strong></label></td>
+                    <td>
+                        <input type="text" size="8" name="nota" class="disabled-input" readonly>
+                    </td>
+                    <td>
+                        <select name="decimnota">
+                            <option value="0">Sin decimales</option>
+                            <option selected value="1">Con un decimal</option>
+                            <option value="2">Con dos decimales</option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+            
+            <div style="margin-top: 20px;">
+                <input type="text" name="coment" class="comment-input" readonly>
+            </div>
+        </form>
+
+         <hr>
+        
+         </div>
+
+    <script>
+        function abrirVentana(texto, barras, ancho, alto) {
+            const features = `toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=${barras ? 1 : 0},resizable=0,copyhistory=0,width=${ancho},height=${alto}`;
+            window.open(texto + '.htm', '_blank', features);
+        }
+
+        function calcularNota(form) {
+            let comentario = "";
+            const XId = parseFloat(form.xid.value) || 0;
+            const PorExig = parseFloat(form.porexig.value) || 0;
+
+            const msg1 = "Obs: el porcentaje de exigencia puede ser menos de 50%, pero esto no es frecuente.";
+            const msg2 = "Error: el porcentaje de exigencia no puede ser más de 100%.";
+            const msg3 = "Error: el porcentaje de exigencia no puede ser negativo.";
+            const msg4 = "Error: La nota máxima aprobatoria no puede ser menor que la nota mínima aprobatoria";
+            const msg5 = "Error: el puntaje del alumno no puede ser mayor que el puntaje ideal.";
+            const msg6 = "Obs.: el valor que ingresaste en puntaje del alumno es negativo; esto puede ser, pero no es frecuente.";
+            const msg7 = "";
+
+            if (PorExig < 50) {
+                comentario = msg1;
+            }
+
+            let numero = (XId * PorExig) / 100;
+            let n1;
+            
+            switch(parseInt(form.decimexig.value)) {
+                case 0: n1 = 1; break;
+                case 1: n1 = 10; break;
+                case 2: n1 = 100; break;
+                default: n1 = 1;
+            }
+
+            let Xexig = Math.round(numero * n1) / n1;
+
+            const NMaxAp = parseInt(form.nmaxap.value) || 0;
+            const NMinAp = parseInt(form.nminap.value) || 0;
+            const Xalum = parseFloat(form.xalum.value) || 0;
+
+            let numero2 = 0;
+
+            // Validaciones
+            if (PorExig > 100) {
+                numero2 = 0;
+                Xexig = 0;
+                comentario = msg2;
+            } else if (PorExig < 0) {
+                numero2 = 0;
+                Xexig = 0;
+                comentario = msg3;
+            } else if (NMinAp > NMaxAp) {
+                numero2 = 0;
+                Xexig = 0;
+                comentario = msg4;
+            } else if (Xalum > XId) {
+                numero2 = 0;
+                comentario = msg5;
+            } else if (Xalum < 0) {
+                numero2 = 1;
+                comentario = msg6;
+            } else {
+                // Cálculo de la nota
+                if (Xalum === Xexig) {
+                    numero2 = NMinAp;
+                    comentario = msg7;
+                } else if (Xalum > Xexig) {
+                    numero2 = (((NMaxAp - NMinAp) / (XId - Xexig)) * (Xalum - Xexig)) + NMinAp;
+                    comentario = msg7;
+                } else if (Xalum < Xexig) {
+                    numero2 = (((NMinAp - 1) / Xexig) * Xalum) + 1;
+                    comentario = msg7;
+                }
+            }
+
+            // Redondeo de la nota final
+            let n2;
+            switch(parseInt(form.decimnota.value)) {
+                case 0: n2 = 1; break;
+                case 1: n2 = 10; break;
+                case 2: n2 = 100; break;
+                default: n2 = 10;
+            }
+
+            const result = Math.round(numero2 * n2) / n2;
+
+            // Mostrar resultados
+            form.xexig.value = Xexig;
+            form.nota.value = result;
+            form.coment.value = comentario;
+        }
+    </script>
+</body>
+</html>
